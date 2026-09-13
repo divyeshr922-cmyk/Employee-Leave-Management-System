@@ -9,4 +9,5 @@ coverage/
 powershell.cmd
 powershell.bat
 launch.bat
+push_to_git.bat
 scratch/
