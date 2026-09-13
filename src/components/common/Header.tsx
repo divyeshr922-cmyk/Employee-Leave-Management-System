@@ -71,19 +71,19 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-1 sm:gap-4 min-w-0">
         
         {/* Left Side: Mobile Menu Button & Brand */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Mobile hamburger toggle (min 44x44px touch target) */}
+        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
+          {/* Mobile hamburger toggle */}
           <button
             type="button"
             onClick={onToggleMobileMenu}
-            className="w-10 h-10 flex items-center justify-center text-slate-700 hover:text-slate-950 hover:bg-slate-100 rounded-xl md:hidden transition-all cursor-pointer tap-active shrink-0 border border-slate-200"
+            className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-slate-700 hover:text-slate-950 hover:bg-slate-100 rounded-xl md:hidden transition-all cursor-pointer tap-active shrink-0 border border-slate-200"
             aria-label="Toggle navigation menu"
             id="header-mobile-toggle-btn"
           >
-            {isMobileMenuOpen ? <X className="w-5 h-5 text-slate-900" /> : <Menu className="w-5 h-5" />}
+            {isMobileMenuOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5" />}
           </button>
 
           {/* Logo and App Title */}
@@ -92,18 +92,19 @@ export const Header: React.FC<HeaderProps> = ({
               window.history.pushState({}, '', '/');
               if (onNavigateToHome) onNavigateToHome();
             }}
-            className="flex items-center gap-2.5 cursor-pointer group select-none"
+            className="flex items-center gap-1.5 sm:gap-2.5 cursor-pointer group select-none min-w-0"
             title="Workforce Management Home"
           >
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-xs transition-transform shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-xs transition-transform shrink-0">
               ELMS
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <div className="text-sm sm:text-base font-bold text-slate-900 tracking-tight leading-none">
-                  Workforce Portal
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                <div className="text-[11px] sm:text-base font-bold text-slate-900 tracking-tight leading-tight shrink-0 flex flex-col sm:flex-row sm:gap-1">
+                  <span>Workforce</span>
+                  <span>Portal</span>
                 </div>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${roleBadges[currentRole]?.badge}`}>
+                <span className={`text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full border shrink-0 ${roleBadges[currentRole]?.badge}`}>
                   {roleBadges[currentRole]?.label}
                 </span>
               </div>
@@ -115,7 +116,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Right Action Bar */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
           
           {/* Daily Attendance Clock Widget (Compact for Staff on desktop) */}
           {currentUser && currentRole !== 'ADMIN' && (
@@ -155,20 +156,22 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={onOpenAddEmployee || onOpenApplyLeave}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 sm:px-3.5 py-2 rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer tap-active shrink-0"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold w-8 h-8 sm:w-auto p-0 sm:px-3.5 sm:py-2 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer tap-active shrink-0"
               id="header-add-employee-btn"
+              title="Add Employee"
             >
-              <UserPlus className="w-3.5 h-3.5" />
+              <UserPlus className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
               <span className="hidden sm:inline">+ Add Employee</span>
             </button>
           ) : (
             <button
               type="button"
               onClick={onOpenApplyLeave}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 sm:px-3.5 py-2 rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer tap-active shrink-0"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold w-8 h-8 sm:w-auto p-0 sm:px-3.5 sm:py-2 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer tap-active shrink-0"
               id="header-apply-leave-btn"
+              title="Apply Leave"
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
               <span className="hidden sm:inline">Apply Leave</span>
             </button>
           )}
@@ -177,14 +180,14 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => setIsNotifOpen(true)}
-            className="relative w-10 h-10 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all cursor-pointer tap-active shrink-0 border border-slate-200"
+            className="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all cursor-pointer tap-active shrink-0 border border-slate-200"
             id="header-notif-btn"
             aria-label="View notifications"
             title="Notifications"
           >
-            <Bell className="w-4 h-4" />
+            <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             {unreadCount > 0 && (
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white" />
+              <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white" />
             )}
           </button>
 
@@ -194,18 +197,18 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                className="flex items-center gap-2 p-1 sm:px-2 sm:py-1.5 hover:bg-slate-50 rounded-xl transition-all cursor-pointer border border-slate-200 tap-active"
+                className="flex items-center gap-1 sm:gap-2 p-1 sm:px-2 sm:py-1.5 hover:bg-slate-50 rounded-xl transition-all cursor-pointer border border-slate-200 tap-active shrink-0"
                 id="header-user-menu-btn"
                 aria-expanded={isProfileMenuOpen}
               >
-                <div className="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center shrink-0">
                   {currentUser.name.charAt(0)}
                 </div>
                 <div className="hidden md:block text-left">
                   <div className="text-xs font-bold text-slate-900 leading-none">{currentUser.name}</div>
                   <div className="text-[10px] text-slate-500 font-medium mt-0.5">{roleBadges[currentRole]?.label}</div>
                 </div>
-                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 transition-transform hidden xs:block ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Dropdown Menu */}
