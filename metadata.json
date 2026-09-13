@@ -1,0 +1,6 @@
+{
+  "name": "Employee Leave Management System",
+  "description": "Comprehensive Employee Leave Management System with role-based access control, automated leave workflows, balance tracking, attendance management, team calendar, analytics, and reports export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
