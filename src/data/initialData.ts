@@ -208,6 +208,79 @@ export const INITIAL_LEAVE_BALANCES: LeaveBalance[] = [
 
 export const INITIAL_LEAVE_REQUESTS: LeaveRequest[] = [
   {
+    id: 'lr-demo-03',
+    requestNo: 'LR-2026-003',
+    employeeId: 'emp-sarah',
+    employeeName: 'Sarah Jenkins',
+    employeeCode: 'EMP1001',
+    departmentId: 'dept-eng',
+    departmentName: 'Engineering & Technology',
+    leaveTypeId: 'lt-cl',
+    leaveTypeName: 'Casual Leave',
+    leaveTypeCode: 'CL',
+    startDate: '2026-09-14',
+    endDate: '2026-09-14',
+    numberOfDays: 1,
+    isHalfDay: false,
+    reason: 'Personal family errands',
+    emergencyContact: '+1 (555) 876-5432',
+    status: 'PENDING',
+    appliedAt: '2026-09-13T08:30:00.000Z',
+    updatedAt: '2026-09-13T08:30:00.000Z',
+    reviewHistory: [
+      {
+        id: 'rev-03',
+        reviewerId: 'emp-sarah',
+        reviewerName: 'Sarah Jenkins',
+        reviewerRole: 'EMPLOYEE',
+        action: 'APPLIED',
+        comment: 'Submitted casual leave application',
+        timestamp: '2026-09-13T08:30:00.000Z'
+      }
+    ]
+  },
+  {
+    id: 'lr-demo-02',
+    requestNo: 'LR-2026-002',
+    employeeId: 'emp-mgr',
+    employeeName: 'Alex Rivera',
+    employeeCode: 'EMP1002',
+    departmentId: 'dept-eng',
+    departmentName: 'Engineering & Technology',
+    leaveTypeId: 'lt-cl',
+    leaveTypeName: 'Casual Leave',
+    leaveTypeCode: 'CL',
+    startDate: '2026-09-14',
+    endDate: '2026-09-14',
+    numberOfDays: 1,
+    isHalfDay: false,
+    reason: 'Urgent home maintenance',
+    emergencyContact: '+1 (555) 234-5678',
+    status: 'REJECTED',
+    appliedAt: '2026-09-12T14:20:00.000Z',
+    updatedAt: '2026-09-12T15:00:00.000Z',
+    reviewHistory: [
+      {
+        id: 'rev-02a',
+        reviewerId: 'emp-mgr',
+        reviewerName: 'Alex Rivera',
+        reviewerRole: 'MANAGER',
+        action: 'APPLIED',
+        comment: 'Submitted leave application to executive admin',
+        timestamp: '2026-09-12T14:20:00.000Z'
+      },
+      {
+        id: 'rev-02b',
+        reviewerId: 'emp-admin',
+        reviewerName: 'Devika Sharma',
+        reviewerRole: 'ADMIN',
+        action: 'REJECTED',
+        comment: 'High priority sprint release scheduled on that date.',
+        timestamp: '2026-09-12T15:00:00.000Z'
+      }
+    ]
+  },
+  {
     id: 'lr-demo-01',
     requestNo: 'LR-2026-001',
     employeeId: 'emp-sarah',
@@ -224,18 +297,27 @@ export const INITIAL_LEAVE_REQUESTS: LeaveRequest[] = [
     isHalfDay: false,
     reason: 'Family gathering and personal travel',
     emergencyContact: '+1 (555) 876-5432',
-    status: 'PENDING',
-    appliedAt: '2026-09-12T10:30:00.000Z',
-    updatedAt: '2026-09-12T10:30:00.000Z',
+    status: 'NEEDS_INFO',
+    appliedAt: '2026-09-10T10:30:00.000Z',
+    updatedAt: '2026-09-11T11:00:00.000Z',
     reviewHistory: [
       {
-        id: 'rev-01',
+        id: 'rev-01a',
         reviewerId: 'emp-sarah',
         reviewerName: 'Sarah Jenkins',
         reviewerRole: 'EMPLOYEE',
         action: 'APPLIED',
         comment: 'Submitted leave application',
-        timestamp: '2026-09-12T10:30:00.000Z'
+        timestamp: '2026-09-10T10:30:00.000Z'
+      },
+      {
+        id: 'rev-01b',
+        reviewerId: 'emp-mgr',
+        reviewerName: 'Alex Rivera',
+        reviewerRole: 'MANAGER',
+        action: 'NEEDS_INFO',
+        comment: 'Please confirm client coverage while you are away.',
+        timestamp: '2026-09-11T11:00:00.000Z'
       }
     ]
   }

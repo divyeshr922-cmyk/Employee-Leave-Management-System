@@ -63,6 +63,7 @@ interface DataContextType {
   ) => void;
 
   cancelLeaveRequest: (requestId: string, userId: string) => void;
+  deleteLeaveRequest: (requestId: string, operatorId?: string, operatorName?: string, operatorRole?: Role) => void;
 
   checkIn: (employeeId: string, employeeName: string) => void;
   checkOut: (employeeId: string) => void;
@@ -428,6 +429,56 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     logAudit(userId, target.employeeName, 'EMPLOYEE', 'Cancel Leave', 'Leave Management', `Cancelled request ${target.requestNo}`);
   };
 
+  const deleteLeaveRequest = (requestId: string, operatorId?: string, operatorName?: string, operatorRole?: Role) => {
+    const target = leaveRequests.find(r => r.id === requestId);
+    if (!target) return;
+
+    setLeaveRequests(prev => {
+      const updated = prev.filter(r => r.id !== requestId);
+      try {
+        localStorage.setItem('elms_leave_requests', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to sync leave requests', e);
+      }
+      return updated;
+    });
+
+    // Release pending balance or restore remaining used
+    setLeaveBalances(prev => {
+      const updated = prev.map(b => {
+        if (b.employeeId === target.employeeId && b.leaveTypeId === target.leaveTypeId) {
+          if (target.status === 'PENDING') {
+            return { ...b, pending: Math.max(0, b.pending - target.numberOfDays) };
+          } else if (target.status === 'APPROVED') {
+            return {
+              ...b,
+              used: Math.max(0, b.used - target.numberOfDays),
+              remaining: b.remaining + target.numberOfDays
+            };
+          }
+        }
+        return b;
+      });
+      try {
+        localStorage.setItem('elms_leave_balances', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to sync leave balances', e);
+      }
+      return updated;
+    });
+
+    setNotifications(prev => prev.filter(n => n.linkId !== requestId));
+
+    logAudit(
+      operatorId || 'admin',
+      operatorName || 'Administrator',
+      operatorRole || 'ADMIN',
+      'Delete Leave Request',
+      'Leave Management',
+      `Permanently deleted leave application ${target.requestNo} for ${target.employeeName}`
+    );
+  };
+
   // Attendance Clock In / Clock Out
   const checkIn = (employeeId: string, employeeName: string) => {
     const today = new Date().toISOString().split('T')[0];
@@ -633,6 +684,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         applyLeaveRequest,
         reviewLeaveRequest,
         cancelLeaveRequest,
+        deleteLeaveRequest,
         checkIn,
         checkOut,
         addEmployee,

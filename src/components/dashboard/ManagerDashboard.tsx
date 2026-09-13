@@ -15,7 +15,8 @@ import {
   AlertTriangle,
   ArrowRight,
   Clock,
-  X
+  X,
+  Trash2
 } from 'lucide-react';
 
 interface ManagerDashboardProps {
@@ -27,8 +28,8 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({
   onSelectRequest,
   onNavigateToTab
 }) => {
-  const { currentUser } = useAuth();
-  const { users, leaveRequests, attendance, reviewLeaveRequest } = useData();
+  const { currentUser, currentRole } = useAuth();
+  const { users, leaveRequests, attendance, reviewLeaveRequest, deleteLeaveRequest } = useData();
 
   // Rejection comment modal state
   const [rejectingRequest, setRejectingRequest] = useState<LeaveRequest | null>(null);
@@ -318,6 +319,21 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({
                     >
                       <MessageSquare className="w-3.5 h-3.5" />
                       <span>View Details</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (window.confirm(`Are you sure you want to permanently delete leave request ${req.requestNo} for ${req.employeeName}? This will restore allocated leave balances.`)) {
+                          deleteLeaveRequest(req.id, currentUser?.id, currentUser?.name, currentRole);
+                        }
+                      }}
+                      className="px-3 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-lg transition-colors cursor-pointer flex items-center gap-1 tap-active"
+                      id={`mgr-delete-btn-${req.id}`}
+                      title="Delete request"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Delete</span>
                     </button>
 
                     <button

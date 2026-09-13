@@ -22,6 +22,18 @@ import { LoginRegisterModal } from './components/auth/LoginRegisterModal';
 import { LandingLoginPage } from './components/home/LandingLoginPage';
 import { CreateEmployeeModal } from './components/employees/CreateEmployeeModal';
 import { LeaveRequest } from './types';
+import {
+  Home,
+  CheckSquare,
+  Calendar,
+  Clock,
+  Users,
+  Building2,
+  Sliders,
+  BarChart3,
+  ShieldCheck,
+  Settings
+} from 'lucide-react';
 
 const MainAppContent: React.FC = () => {
   const { currentUser, currentRole } = useAuth();
@@ -289,106 +301,255 @@ const MainAppContent: React.FC = () => {
             </main>
 
             {/* Mobile Bottom Navigation Bar (< md) */}
-            <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-30 md:hidden flex items-center justify-around px-1 py-1.5 shadow-lg select-none" aria-label="Mobile navigation">
-              {/* Tab 1: Home */}
-              <button
-                type="button"
-                onClick={() => setActiveTab('dashboard')}
-                className={`flex flex-col items-center justify-center flex-1 py-1 px-0.5 rounded-xl transition-all cursor-pointer tap-active min-w-0 ${
-                  activeTab === 'dashboard' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
-                }`}
-                id="mobile-nav-home"
+            {currentRole === 'ADMIN' ? (
+              <nav
+                className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-30 md:hidden flex items-center overflow-x-auto py-1.5 px-2 gap-1 shadow-lg select-none scrollbar-none"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                aria-label="Admin Mobile Navigation"
+                id="admin-mobile-bottom-nav"
               >
-                <div className={`p-1 rounded-lg ${activeTab === 'dashboard' ? 'bg-indigo-50 text-indigo-600' : ''}`}>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                  </svg>
-                </div>
-                <span className="text-[10px] tracking-tight mt-0.5 truncate">Home</span>
-              </button>
+                {/* 1. Home */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('dashboard')}
+                  className={`flex flex-col items-center justify-center shrink-0 min-w-[64px] py-1 px-1 rounded-xl transition-all cursor-pointer tap-active ${
+                    activeTab === 'dashboard' ? 'text-indigo-600 font-bold bg-indigo-50/80' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="admin-mobile-nav-home"
+                >
+                  <Home className="w-5 h-5" />
+                  <span className="text-[10px] tracking-tight mt-0.5 whitespace-nowrap">Home</span>
+                </button>
 
-              {/* Tab 2: My Leave */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (currentRole === 'ADMIN') {
-                    setActiveTab('approvals');
-                  } else {
-                    setActiveTab('my_leaves');
-                  }
-                }}
-                className={`flex flex-col items-center justify-center flex-1 py-1 px-0.5 rounded-xl transition-all relative cursor-pointer tap-active min-w-0 ${
-                  activeTab === 'my_leaves' || activeTab === 'approvals' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
-                }`}
-                id="mobile-nav-leave"
-              >
-                <div className={`p-1 rounded-lg ${activeTab === 'my_leaves' || activeTab === 'approvals' ? 'bg-indigo-50 text-indigo-600' : ''}`}>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                {pendingCount > 0 && (currentRole === 'ADMIN' || currentRole === 'MANAGER') && (
-                  <span className="absolute top-0.5 right-3 w-4 h-4 rounded-full bg-amber-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
-                    {pendingCount}
+                {/* 2. Leave Approvals */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('approvals')}
+                  className={`flex flex-col items-center justify-center shrink-0 min-w-[64px] py-1 px-1 rounded-xl transition-all relative cursor-pointer tap-active ${
+                    activeTab === 'approvals' ? 'text-indigo-600 font-bold bg-indigo-50/80' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="admin-mobile-nav-approvals"
+                >
+                  <div className="relative">
+                    <CheckSquare className="w-5 h-5" />
+                    {pendingCount > 0 && (
+                      <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-amber-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                        {pendingCount}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[10px] tracking-tight mt-0.5 whitespace-nowrap">Approvals</span>
+                </button>
+
+                {/* 3. Calendar & Holidays */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('calendar')}
+                  className={`flex flex-col items-center justify-center shrink-0 min-w-[64px] py-1 px-1 rounded-xl transition-all cursor-pointer tap-active ${
+                    activeTab === 'calendar' ? 'text-indigo-600 font-bold bg-indigo-50/80' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="admin-mobile-nav-calendar"
+                >
+                  <Calendar className="w-5 h-5" />
+                  <span className="text-[10px] tracking-tight mt-0.5 whitespace-nowrap">Calendar</span>
+                </button>
+
+                {/* 4. Attendance Register */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('attendance')}
+                  className={`flex flex-col items-center justify-center shrink-0 min-w-[64px] py-1 px-1 rounded-xl transition-all cursor-pointer tap-active ${
+                    activeTab === 'attendance' ? 'text-indigo-600 font-bold bg-indigo-50/80' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="admin-mobile-nav-attendance"
+                >
+                  <Clock className="w-5 h-5" />
+                  <span className="text-[10px] tracking-tight mt-0.5 whitespace-nowrap">Attendance</span>
+                </button>
+
+                {/* 5. Employee Directory */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('employees')}
+                  className={`flex flex-col items-center justify-center shrink-0 min-w-[64px] py-1 px-1 rounded-xl transition-all cursor-pointer tap-active ${
+                    activeTab === 'employees' ? 'text-indigo-600 font-bold bg-indigo-50/80' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="admin-mobile-nav-employees"
+                >
+                  <Users className="w-5 h-5" />
+                  <span className="text-[10px] tracking-tight mt-0.5 whitespace-nowrap">Employees</span>
+                </button>
+
+                {/* 6. Departments */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('departments')}
+                  className={`flex flex-col items-center justify-center shrink-0 min-w-[64px] py-1 px-1 rounded-xl transition-all cursor-pointer tap-active ${
+                    activeTab === 'departments' ? 'text-indigo-600 font-bold bg-indigo-50/80' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="admin-mobile-nav-departments"
+                >
+                  <Building2 className="w-5 h-5" />
+                  <span className="text-[10px] tracking-tight mt-0.5 whitespace-nowrap">Departments</span>
+                </button>
+
+                {/* 7. Leave Policies */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('policies')}
+                  className={`flex flex-col items-center justify-center shrink-0 min-w-[64px] py-1 px-1 rounded-xl transition-all cursor-pointer tap-active ${
+                    activeTab === 'policies' ? 'text-indigo-600 font-bold bg-indigo-50/80' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="admin-mobile-nav-policies"
+                >
+                  <Sliders className="w-5 h-5" />
+                  <span className="text-[10px] tracking-tight mt-0.5 whitespace-nowrap">Policies</span>
+                </button>
+
+                {/* 8. Reports & Analytics */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('reports')}
+                  className={`flex flex-col items-center justify-center shrink-0 min-w-[64px] py-1 px-1 rounded-xl transition-all cursor-pointer tap-active ${
+                    activeTab === 'reports' ? 'text-indigo-600 font-bold bg-indigo-50/80' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="admin-mobile-nav-reports"
+                >
+                  <BarChart3 className="w-5 h-5" />
+                  <span className="text-[10px] tracking-tight mt-0.5 whitespace-nowrap">Reports</span>
+                </button>
+
+                {/* 9. Audit Logs */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('audit')}
+                  className={`flex flex-col items-center justify-center shrink-0 min-w-[64px] py-1 px-1 rounded-xl transition-all cursor-pointer tap-active ${
+                    activeTab === 'audit' ? 'text-indigo-600 font-bold bg-indigo-50/80' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="admin-mobile-nav-audit"
+                >
+                  <ShieldCheck className="w-5 h-5" />
+                  <span className="text-[10px] tracking-tight mt-0.5 whitespace-nowrap">Audit Logs</span>
+                </button>
+
+                {/* 10. System Settings */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('settings')}
+                  className={`flex flex-col items-center justify-center shrink-0 min-w-[64px] py-1 px-1 rounded-xl transition-all cursor-pointer tap-active ${
+                    activeTab === 'settings' ? 'text-indigo-600 font-bold bg-indigo-50/80' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="admin-mobile-nav-settings"
+                >
+                  <Settings className="w-5 h-5" />
+                  <span className="text-[10px] tracking-tight mt-0.5 whitespace-nowrap">Settings</span>
+                </button>
+              </nav>
+            ) : (
+              /* Staff & Manager Navigation Bar */
+              <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-30 md:hidden flex items-center justify-around px-1 py-1.5 shadow-lg select-none" aria-label="Mobile navigation">
+                {/* Tab 1: Home */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('dashboard')}
+                  className={`flex flex-col items-center justify-center flex-1 py-1 px-0.5 rounded-xl transition-all cursor-pointer tap-active min-w-0 ${
+                    activeTab === 'dashboard' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="mobile-nav-home"
+                >
+                  <div className={`p-1 rounded-lg ${activeTab === 'dashboard' ? 'bg-indigo-50 text-indigo-600' : ''}`}>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] tracking-tight mt-0.5 truncate">Home</span>
+                </button>
+
+                {/* Tab 2: My Leave or Approvals */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (currentRole === 'MANAGER') {
+                      setActiveTab('approvals');
+                    } else {
+                      setActiveTab('my_leaves');
+                    }
+                  }}
+                  className={`flex flex-col items-center justify-center flex-1 py-1 px-0.5 rounded-xl transition-all relative cursor-pointer tap-active min-w-0 ${
+                    activeTab === 'my_leaves' || activeTab === 'approvals' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="mobile-nav-leave"
+                >
+                  <div className={`p-1 rounded-lg ${activeTab === 'my_leaves' || activeTab === 'approvals' ? 'bg-indigo-50 text-indigo-600' : ''}`}>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  {pendingCount > 0 && currentRole === 'MANAGER' && (
+                    <span className="absolute top-0.5 right-3 w-4 h-4 rounded-full bg-amber-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                      {pendingCount}
+                    </span>
+                  )}
+                  <span className="text-[10px] tracking-tight mt-0.5 truncate">
+                    {currentRole === 'MANAGER' ? 'Approvals' : 'My Leave'}
                   </span>
-                )}
-                <span className="text-[10px] tracking-tight mt-0.5 truncate">My Leave</span>
-              </button>
+                </button>
 
-              {/* Tab 3: Calendar */}
-              <button
-                type="button"
-                onClick={() => setActiveTab('calendar')}
-                className={`flex flex-col items-center justify-center flex-1 py-1 px-0.5 rounded-xl transition-all cursor-pointer tap-active min-w-0 ${
-                  activeTab === 'calendar' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
-                }`}
-                id="mobile-nav-calendar"
-              >
-                <div className={`p-1 rounded-lg ${activeTab === 'calendar' ? 'bg-indigo-50 text-indigo-600' : ''}`}>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <span className="text-[10px] tracking-tight mt-0.5 truncate">Calendar</span>
-              </button>
+                {/* Tab 3: Calendar */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('calendar')}
+                  className={`flex flex-col items-center justify-center flex-1 py-1 px-0.5 rounded-xl transition-all cursor-pointer tap-active min-w-0 ${
+                    activeTab === 'calendar' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="mobile-nav-calendar"
+                >
+                  <div className={`p-1 rounded-lg ${activeTab === 'calendar' ? 'bg-indigo-50 text-indigo-600' : ''}`}>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] tracking-tight mt-0.5 truncate">Calendar</span>
+                </button>
 
-              {/* Tab 4: Clock */}
-              <button
-                type="button"
-                onClick={() => setActiveTab('attendance')}
-                className={`flex flex-col items-center justify-center flex-1 py-1 px-0.5 rounded-xl transition-all cursor-pointer tap-active min-w-0 ${
-                  activeTab === 'attendance' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
-                }`}
-                id="mobile-nav-clock"
-              >
-                <div className={`p-1 rounded-lg ${activeTab === 'attendance' ? 'bg-indigo-50 text-indigo-600' : ''}`}>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <span className="text-[10px] tracking-tight mt-0.5 truncate">Clock</span>
-              </button>
+                {/* Tab 4: Clock */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('attendance')}
+                  className={`flex flex-col items-center justify-center flex-1 py-1 px-0.5 rounded-xl transition-all cursor-pointer tap-active min-w-0 ${
+                    activeTab === 'attendance' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="mobile-nav-clock"
+                >
+                  <div className={`p-1 rounded-lg ${activeTab === 'attendance' ? 'bg-indigo-50 text-indigo-600' : ''}`}>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] tracking-tight mt-0.5 truncate">Clock</span>
+                </button>
 
-              {/* Tab 5: Report & Analytics */}
-              <button
-                type="button"
-                onClick={() => setActiveTab('reports')}
-                className={`flex flex-col items-center justify-center flex-1 py-1 px-0.5 rounded-xl transition-all cursor-pointer tap-active min-w-0 ${
-                  activeTab === 'reports' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
-                }`}
-                id="mobile-nav-reports"
-              >
-                <div className={`p-1 rounded-lg ${activeTab === 'reports' ? 'bg-indigo-50 text-indigo-600' : ''}`}>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                </div>
-                <span className="text-[10px] tracking-tight mt-0.5 truncate max-w-full text-center px-0.5">
-                  <span className="xs:hidden">Reports</span>
-                  <span className="hidden xs:inline">Report &amp; Analytics</span>
-                </span>
-              </button>
-            </nav>
+                {/* Tab 5: Report & Analytics */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('reports')}
+                  className={`flex flex-col items-center justify-center flex-1 py-1 px-0.5 rounded-xl transition-all cursor-pointer tap-active min-w-0 ${
+                    activeTab === 'reports' ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                  id="mobile-nav-reports"
+                >
+                  <div className={`p-1 rounded-lg ${activeTab === 'reports' ? 'bg-indigo-50 text-indigo-600' : ''}`}>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] tracking-tight mt-0.5 truncate max-w-full text-center px-0.5">
+                    <span className="xs:hidden">Reports</span>
+                    <span className="hidden xs:inline">Report &amp; Analytics</span>
+                  </span>
+                </button>
+              </nav>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

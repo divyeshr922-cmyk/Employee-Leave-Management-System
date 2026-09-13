@@ -17,7 +17,8 @@ import {
   History,
   MessageSquare,
   AlertCircle,
-  Shield
+  Shield,
+  Trash2
 } from 'lucide-react';
 
 interface LeaveDetailModalProps {
@@ -32,7 +33,7 @@ export const LeaveDetailModal: React.FC<LeaveDetailModalProps> = ({
   onClose
 }) => {
   const { currentUser, currentRole } = useAuth();
-  const { users, reviewLeaveRequest, cancelLeaveRequest } = useData();
+  const { users, reviewLeaveRequest, cancelLeaveRequest, deleteLeaveRequest } = useData();
   const [reviewComment, setReviewComment] = useState('');
   const [actionError, setActionError] = useState('');
 
@@ -277,18 +278,35 @@ export const LeaveDetailModal: React.FC<LeaveDetailModalProps> = ({
           </div>
         )}
 
-        {/* Cancel Button for Employee */}
-        {canCancel && (
-          <div className="pt-2 flex justify-start">
+        {/* Footer Actions: Cancel for Employee, Delete for Manager & Admin */}
+        <div className="pt-2 flex items-center justify-between border-t border-slate-100">
+          {canCancel ? (
             <button
               onClick={handleCancel}
-              className="text-xs font-semibold text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-200 transition-colors"
+              className="text-xs font-semibold text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-200 transition-colors cursor-pointer"
               id="cancel-request-btn"
             >
               Cancel Leave Request
             </button>
-          </div>
-        )}
+          ) : <div />}
+
+          {(currentRole === 'MANAGER' || currentRole === 'ADMIN') && (
+            <button
+              type="button"
+              onClick={() => {
+                if (window.confirm(`Are you sure you want to permanently delete leave request ${request.requestNo} for ${request.employeeName}? This will restore allocated leave balances.`)) {
+                  deleteLeaveRequest(request.id, currentUser?.id, currentUser?.name, currentRole);
+                  onClose();
+                }
+              }}
+              className="text-xs font-bold text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-1.5 rounded-xl border border-rose-200 transition-colors flex items-center gap-1.5 cursor-pointer tap-active"
+              id="modal-delete-request-btn"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Delete Application</span>
+            </button>
+          )}
+        </div>
 
       </div>
     </Modal>
