@@ -79,14 +79,25 @@ const MainAppContent: React.FC = () => {
   }, [viewMode, currentUser, currentRole]);
 
   // Count pending approvals for badge in sidebar
+  // Subordinate employees reporting to this manager (strictly excludes self and other managers)
   const teamUserIds = new Set(
     users
-      .filter(u => u.managerId === currentUser?.id || u.departmentId === currentUser?.departmentId)
+      .filter(u => u.id !== currentUser?.id && u.role === 'EMPLOYEE' && (u.managerId === currentUser?.id || u.departmentId === currentUser?.departmentId))
       .map(u => u.id)
   );
-  const pendingCount = leaveRequests.filter(
-    r => r.status === 'PENDING' && (currentRole === 'ADMIN' || teamUserIds.has(r.employeeId))
-  ).length;
+
+  // When manager applies for leave, the approval goes to Admin portal!
+  // Admin sees ALL pending requests (including managers and employees).
+  // Manager ONLY sees pending requests from subordinate employees.
+  const pendingCount = leaveRequests.filter(r => {
+    if (r.status !== 'PENDING') return false;
+    if (currentRole === 'ADMIN') return true;
+    if (currentRole === 'MANAGER') {
+      const requester = users.find(u => u.id === r.employeeId);
+      return requester?.role === 'EMPLOYEE' && teamUserIds.has(r.employeeId);
+    }
+    return false;
+  }).length;
 
   const handleSelectRequestById = (requestId: string) => {
     const found = leaveRequests.find(r => r.id === requestId);
@@ -99,9 +110,13 @@ const MainAppContent: React.FC = () => {
     ? leaveRequests.filter(r => r.employeeId === currentUser.id)
     : [];
 
+  // Team requests queue: For Admin, show all organization requests. For Manager, only subordinate employees.
   const teamRequests = currentRole === 'ADMIN'
     ? leaveRequests
-    : leaveRequests.filter(r => teamUserIds.has(r.employeeId));
+    : leaveRequests.filter(r => {
+        const requester = users.find(u => u.id === r.employeeId);
+        return requester?.role === 'EMPLOYEE' && teamUserIds.has(r.employeeId);
+      });
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col font-sans text-slate-800 antialiased selection:bg-indigo-600 selection:text-white">
@@ -148,7 +163,7 @@ const MainAppContent: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.3 }}
-            className="flex-1 max-w-7xl w-full mx-auto flex min-w-0 pb-16 md:pb-0"
+            className="flex-1 w-full flex min-w-0 pb-16 md:pb-8"
           >
             {/* Navigation Sidebar */}
             <Sidebar
@@ -161,8 +176,8 @@ const MainAppContent: React.FC = () => {
               onCloseMobile={() => setIsMobileMenuOpen(false)}
             />
 
-            {/* Main View Area with Mobile-Responsive Padding */}
-            <main className="flex-1 p-3.5 sm:p-6 lg:p-8 overflow-y-auto min-w-0">
+            {/* Main View Area with Mobile-Responsive Padding & Bottom Breathing Room */}
+            <main className="flex-1 p-3.5 sm:p-6 lg:p-8 pb-12 overflow-y-auto min-w-0">
               
               {activeTab === 'dashboard' && (
                 <motion.div
@@ -217,7 +232,7 @@ const MainAppContent: React.FC = () => {
                   <LeaveHistoryTable
                     requests={teamRequests}
                     onSelectRequest={setSelectedRequest}
-                    title="Team Leave Approvals Queue"
+                    title={currentRole === 'ADMIN' ? 'Organization Leave Approvals (Executive Review)' : 'Team Leave Approvals Queue'}
                     showEmployeeColumn={true}
                   />
                 </motion.div>

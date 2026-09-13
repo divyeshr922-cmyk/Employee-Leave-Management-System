@@ -16,7 +16,8 @@ import {
   HelpCircle,
   History,
   MessageSquare,
-  AlertCircle
+  AlertCircle,
+  Shield
 } from 'lucide-react';
 
 interface LeaveDetailModalProps {
@@ -31,7 +32,7 @@ export const LeaveDetailModal: React.FC<LeaveDetailModalProps> = ({
   onClose
 }) => {
   const { currentUser, currentRole } = useAuth();
-  const { reviewLeaveRequest, cancelLeaveRequest } = useData();
+  const { users, reviewLeaveRequest, cancelLeaveRequest } = useData();
   const [reviewComment, setReviewComment] = useState('');
   const [actionError, setActionError] = useState('');
 
@@ -39,9 +40,18 @@ export const LeaveDetailModal: React.FC<LeaveDetailModalProps> = ({
 
   const badgeStyle = getStatusBadgeClass(request.status);
 
+  // Check if the applicant is a manager
+  const requester = users.find(u => u.id === request.employeeId);
+  const isManagerRequest = requester?.role === 'MANAGER';
+
+  // Strict approval routing:
+  // - Managers cannot approve their own requests
+  // - Requests by Managers can ONLY be reviewed/approved by an Administrator
+  // - Managers can only review requests from subordinate Employees
   const canReview =
     request.status === 'PENDING' &&
-    (currentRole === 'ADMIN' || currentRole === 'MANAGER');
+    currentUser?.id !== request.employeeId &&
+    (currentRole === 'ADMIN' || (currentRole === 'MANAGER' && !isManagerRequest));
 
   const canCancel =
     (request.status === 'PENDING' || request.status === 'APPROVED') &&
@@ -94,6 +104,16 @@ export const LeaveDetailModal: React.FC<LeaveDetailModalProps> = ({
             {request.status}
           </span>
         </div>
+
+        {/* Manager Leave Executive Routing Indicator */}
+        {isManagerRequest && (
+          <div id="executive-routing-notice" className="p-3 bg-indigo-50 border border-indigo-200 rounded-xl text-xs text-indigo-900 flex items-start gap-2.5">
+            <Shield className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+            <span>
+              <strong>Executive Routing Notice:</strong> This leave application was submitted by Department Manager <strong>{request.employeeName}</strong>. By policy, it is routed exclusively to the <strong>Administrator</strong> for approval.
+            </span>
+          </div>
+        )}
 
         {/* Employee & Leave Info Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">

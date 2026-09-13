@@ -249,7 +249,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ]
     };
 
-    setLeaveRequests(prev => [newRequest, ...prev]);
+    setLeaveRequests(prev => {
+      const updated = [newRequest, ...prev];
+      try {
+        localStorage.setItem('elms_leave_requests', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to sync leave requests', e);
+      }
+      return updated;
+    });
 
     // Update Leave Balance (increase pending)
     setLeaveBalances(prev =>
@@ -264,19 +272,34 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
     );
 
-    // Notify Manager or Admin
-    const managerId = emp.managerId || 'emp-001';
-    const newNotification: Notification = {
-      id: `notif-${Date.now()}`,
-      userId: managerId,
-      title: 'New Leave Application',
-      message: `${emp.name} applied for ${data.numberOfDays} day(s) ${lt.name} (${data.startDate}).`,
-      type: 'LEAVE_APPLIED',
-      isRead: false,
-      createdAt: new Date().toISOString(),
-      linkId: newRequestId
-    };
-    setNotifications(prev => [newNotification, ...prev]);
+    // Notify Manager or Admin: If a Manager applies for leave, route notification directly to Administrators
+    if (emp.role === 'MANAGER') {
+      const adminUsers = users.filter(u => u.role === 'ADMIN');
+      const adminNotifications: Notification[] = adminUsers.map((adminUser, idx) => ({
+        id: `notif-${Date.now()}-${idx}`,
+        userId: adminUser.id,
+        title: 'Manager Leave Application',
+        message: `Department Manager ${emp.name} applied for ${data.numberOfDays} day(s) ${lt.name} (${data.startDate}). Requires Administrator review.`,
+        type: 'LEAVE_APPLIED',
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        linkId: newRequestId
+      }));
+      setNotifications(prev => [...adminNotifications, ...prev]);
+    } else {
+      const managerId = emp.managerId || users.find(u => u.role === 'MANAGER' && u.departmentId === emp.departmentId)?.id || 'emp-mgr';
+      const newNotification: Notification = {
+        id: `notif-${Date.now()}`,
+        userId: managerId,
+        title: 'New Leave Application',
+        message: `${emp.name} applied for ${data.numberOfDays} day(s) ${lt.name} (${data.startDate}).`,
+        type: 'LEAVE_APPLIED',
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        linkId: newRequestId
+      };
+      setNotifications(prev => [newNotification, ...prev]);
+    }
 
     // Audit log
     logAudit(emp.id, emp.name, emp.role, 'Apply Leave', 'Leave Management', `Applied ${data.numberOfDays} days ${lt.code} [${requestNo}]`);
@@ -295,8 +318,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const previousStatus = target.status;
 
-    setLeaveRequests(prev =>
-      prev.map(r => {
+    setLeaveRequests(prev => {
+      const updated = prev.map(r => {
         if (r.id === requestId) {
           const updatedHistory = [
             ...r.reviewHistory,
@@ -320,8 +343,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           };
         }
         return r;
-      })
-    );
+      });
+      try {
+        localStorage.setItem('elms_leave_requests', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to sync leave requests', e);
+      }
+      return updated;
+    });
 
     // Adjust leave balances
     if (previousStatus === 'PENDING') {

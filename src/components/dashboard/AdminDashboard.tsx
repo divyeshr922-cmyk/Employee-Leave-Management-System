@@ -197,9 +197,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
             <span className="text-slate-500">Status</span>
-            <span className={`font-bold ${pendingRequests.length > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
-              {pendingRequests.length > 0 ? 'Awaiting Action' : 'All Clear'}
-            </span>
+            <button
+              type="button"
+              onClick={() => onNavigateToTab('approvals')}
+              className={`font-bold hover:underline cursor-pointer flex items-center gap-1 ${pendingRequests.length > 0 ? 'text-amber-600' : 'text-emerald-600'}`}
+              id="admin-kpi-approvals-btn"
+            >
+              <span>{pendingRequests.length > 0 ? `${pendingRequests.length} Pending` : 'All Clear'}</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
           </div>
         </div>
 

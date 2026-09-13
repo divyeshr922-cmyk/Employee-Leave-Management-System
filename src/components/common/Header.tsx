@@ -71,10 +71,10 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
-      <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-1 sm:gap-4 min-w-0">
+      <div className="w-full px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-1 sm:gap-4 min-w-0">
         
         {/* Left Side: Brand & Role */}
-        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
 
           {/* Logo and App Title */}
           <div
@@ -82,15 +82,15 @@ export const Header: React.FC<HeaderProps> = ({
               window.history.pushState({}, '', '/');
               if (onNavigateToHome) onNavigateToHome();
             }}
-            className="flex items-center gap-1.5 sm:gap-2.5 cursor-pointer group select-none min-w-0"
+            className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group select-none min-w-0"
             title="Workforce Management Home"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-xs transition-transform shrink-0">
+            <div className="px-2.5 h-8 sm:h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-xs sm:text-sm tracking-wide shadow-xs transition-transform shrink-0 select-none">
               ELMS
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                <div className="text-[11px] sm:text-base font-bold text-slate-900 tracking-tight leading-tight shrink-0 flex flex-col sm:flex-row sm:gap-1">
+                <div className="text-xs sm:text-base font-bold text-slate-900 tracking-tight leading-tight shrink-0 flex items-center gap-1">
                   <span>Workforce</span>
                   <span>Portal</span>
                 </div>
@@ -98,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
                   {roleBadges[currentRole]?.label}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-0.5 hidden sm:block">
+              <p className="text-[11px] text-slate-500 mt-0.5 hidden sm:block whitespace-nowrap">
                 Leave & Attendance Management System
               </p>
             </div>

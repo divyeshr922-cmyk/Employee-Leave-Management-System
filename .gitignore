@@ -12,3 +12,4 @@ launch.bat
 push_to_git.bat
 deploy_vercel.bat
 scratch/
+scripts/*.png

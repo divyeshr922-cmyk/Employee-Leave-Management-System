@@ -37,14 +37,18 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({
 
   if (!currentUser) return null;
 
-  // Filter team members managed by this user
+  // Filter team members managed by this user (strictly subordinate EMPLOYEES, excluding self and other managers)
   const teamUsers = users.filter(
-    u => u.managerId === currentUser.id || u.departmentId === currentUser.departmentId
+    u => u.id !== currentUser.id && u.role === 'EMPLOYEE' && (u.managerId === currentUser.id || u.departmentId === currentUser.departmentId)
   );
   const teamUserIds = new Set(teamUsers.map(u => u.id));
 
-  // Team leave requests
-  const teamRequests = leaveRequests.filter(r => teamUserIds.has(r.employeeId));
+  // Team leave requests: strictly for subordinate employees
+  // When a manager applies for leave, the approval is routed to the Admin portal, NOT the manager portal!
+  const teamRequests = leaveRequests.filter(r => {
+    const requester = users.find(u => u.id === r.employeeId);
+    return teamUserIds.has(r.employeeId) && requester?.role === 'EMPLOYEE';
+  });
   const pendingRequests = teamRequests.filter(r => r.status === 'PENDING');
 
   const today = new Date().toISOString().split('T')[0];

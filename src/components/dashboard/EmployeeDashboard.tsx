@@ -125,7 +125,7 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
             id="dash-apply-leave-btn"
           >
             <Plus className="w-4 h-4" />
-            <span>+ Apply Leave</span>
+            <span>Apply Leave</span>
           </button>
         </div>
       </div>
@@ -248,7 +248,9 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
               <span className="text-2xl font-black text-slate-900">{pendingRequests.length}</span>
               <span className="text-xs text-slate-400 font-medium">requests awaiting</span>
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Manager review in progress</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              {currentUser?.role === 'MANAGER' ? 'Administrator review in progress' : 'Manager review in progress'}
+            </p>
           </div>
 
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">

@@ -55,7 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'approvals',
-      label: 'Team Approvals',
+      label: currentRole === 'ADMIN' ? 'Leave Approvals' : 'Team Approvals',
       icon: CheckSquare,
       badge: pendingApprovalsCount,
       roles: ['MANAGER', 'ADMIN']
@@ -159,7 +159,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             id="sidebar-apply-leave-btn"
           >
             <PlusCircle className="w-4 h-4" />
-            <span>+ Apply Leave</span>
+            <span>Apply Leave</span>
           </button>
         )}
       </div>
@@ -253,7 +253,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* Drawer Header */}
             <div className="p-4 border-b border-slate-100 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-xs">
+                <div className="px-2.5 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-xs tracking-wide shadow-xs shrink-0 select-none">
                   ELMS
                 </div>
                 <span className="font-bold text-slate-900 text-sm tracking-tight">Navigation</span>

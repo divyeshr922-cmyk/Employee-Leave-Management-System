@@ -3,7 +3,7 @@ import { Modal } from '../common/Modal';
 import { useData } from '../../context/DataContext';
 import { useAuth } from '../../context/AuthContext';
 import { calculateLeaveDays } from '../../utils/helpers';
-import { Calendar, Upload, AlertTriangle, FileText, CheckCircle2 } from 'lucide-react';
+import { Calendar, Upload, AlertTriangle, FileText, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 interface ApplyLeaveModalProps {
   isOpen: boolean;
@@ -119,9 +119,19 @@ export const ApplyLeaveModal: React.FC<ApplyLeaveModalProps> = ({ isOpen, onClos
       isOpen={isOpen}
       onClose={onClose}
       title="Apply for Leave"
-      subtitle="Submit an official absence request for manager review"
+      subtitle={currentUser.role === 'MANAGER' ? "Submit manager absence request for administrator approval" : "Submit an official absence request for manager review"}
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-5">
+        
+        {/* Manager Leave Notice Banner */}
+        {currentUser.role === 'MANAGER' && (
+          <div className="p-3 bg-indigo-50 border border-indigo-200 rounded-xl text-xs text-indigo-900 flex items-start gap-2.5">
+            <ShieldCheck className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+            <span className="leading-relaxed">
+              <strong>Administrator Approval Routed:</strong> As a Department Manager, this leave application will be directed to the <strong>Administrator Portal</strong> for executive review.
+            </span>
+          </div>
+        )}
         
         {/* Error Notification Banner */}
         {errorMsg && (
