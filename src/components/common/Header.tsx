@@ -9,7 +9,6 @@ import {
   User as UserIcon,
   LogOut,
   Plus,
-  UserPlus,
   ChevronDown,
   Menu,
   X
@@ -141,19 +140,8 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           )}
 
-          {/* Quick Action Button: + Add Employee for Admin, Apply Leave for Staff */}
-          {currentRole === 'ADMIN' ? (
-            <button
-              type="button"
-              onClick={onOpenAddEmployee || onOpenApplyLeave}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold w-8 h-8 sm:w-auto p-0 sm:px-3.5 sm:py-2 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer tap-active shrink-0"
-              id="header-add-employee-btn"
-              title="Add Employee"
-            >
-              <UserPlus className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
-              <span className="hidden sm:inline">+ Add Employee</span>
-            </button>
-          ) : (
+          {/* Quick Action Button: Apply Leave for Staff (Manager/Employee). Admin uses sidebar and console to add employee */}
+          {currentRole !== 'ADMIN' && (
             <button
               type="button"
               onClick={onOpenApplyLeave}

@@ -164,9 +164,19 @@ export const LandingLoginPage: React.FC<LandingLoginPageProps> = ({ onNavigateTo
           {/* Quick Support / Security Badge */}
           <div className="flex items-center gap-2">
             {isAdminRoute ? (
-              <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-xl">
-                <ShieldCheck className="w-4 h-4 text-indigo-600" />
-                <span>Administrator Gateway</span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => navigateToRoute('/')}
+                  className="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:underline px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white transition-colors cursor-pointer"
+                  id="header-back-staff-portal-btn"
+                >
+                  <span>← Staff Portal</span>
+                </button>
+                <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-xl">
+                  <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                  <span>Admin Gateway</span>
+                </div>
               </div>
             ) : (
               <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl">
@@ -303,8 +313,8 @@ export const LandingLoginPage: React.FC<LandingLoginPageProps> = ({ onNavigateTo
                 </p>
               </div>
 
-              {/* Role Selector: Manager vs Employee on Public Route / Admin on /admin Route */}
-              {!isAdminRoute ? (
+              {/* Role Selector: Manager vs Employee on Public Route (Removed completely on Admin route to minimize space) */}
+              {!isAdminRoute && (
                 <div className="bg-[#f0f3f8] p-1 rounded-full border border-slate-200/70 grid grid-cols-2 gap-1 select-none">
                   <button
                     type="button"
@@ -342,30 +352,6 @@ export const LandingLoginPage: React.FC<LandingLoginPageProps> = ({ onNavigateTo
                     <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                     <span>Employee Login</span>
                   </button>
-                </div>
-              ) : (
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-1.5">
-                    <div className="flex items-center gap-2 text-indigo-950 text-xs font-bold">
-                      <ShieldCheck className="w-4 h-4 text-indigo-600 shrink-0" />
-                      <span>Administrator Gateway</span>
-                      <span className="font-mono text-[10px] bg-indigo-200/70 text-indigo-800 px-1.5 py-0.5 rounded font-bold">/admin</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => navigateToRoute('/')}
-                      className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer"
-                    >
-                      ← Staff Portal
-                    </button>
-                  </div>
-
-                  <div className="bg-[#f0f3f8] p-1 rounded-full border border-slate-200/70 select-none">
-                    <div className="w-full py-2 px-3 rounded-full text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 bg-[#4f46e5] text-white shadow-xs">
-                      <ShieldCheck className="w-4 h-4" />
-                      <span>Administrator Login</span>
-                    </div>
-                  </div>
                 </div>
               )}
 
