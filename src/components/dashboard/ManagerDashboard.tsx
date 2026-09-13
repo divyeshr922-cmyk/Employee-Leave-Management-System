@@ -16,17 +16,20 @@ import {
   ArrowRight,
   Clock,
   X,
-  Trash2
+  Trash2,
+  PlusCircle
 } from 'lucide-react';
 
 interface ManagerDashboardProps {
   onSelectRequest: (request: LeaveRequest) => void;
   onNavigateToTab: (tab: string) => void;
+  onOpenApplyLeave?: () => void;
 }
 
 export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({
   onSelectRequest,
-  onNavigateToTab
+  onNavigateToTab,
+  onOpenApplyLeave
 }) => {
   const { currentUser, currentRole } = useAuth();
   const { users, leaveRequests, attendance, reviewLeaveRequest, deleteLeaveRequest } = useData();
@@ -129,15 +132,29 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => onNavigateToTab('approvals')}
-          className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer tap-active"
-          id="mgr-view-approvals-tab-btn"
-        >
-          <CheckSquare className="w-4 h-4" />
-          <span>Full Approvals Queue ({pendingRequests.length})</span>
-        </button>
+        <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap shrink-0">
+          <button
+            type="button"
+            onClick={() => onNavigateToTab('approvals')}
+            className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer tap-active"
+            id="mgr-view-approvals-tab-btn"
+          >
+            <CheckSquare className="w-4 h-4" />
+            <span>Full Approvals Queue ({pendingRequests.length})</span>
+          </button>
+
+          {onOpenApplyLeave && (
+            <button
+              type="button"
+              onClick={onOpenApplyLeave}
+              className="px-4 sm:px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer tap-active"
+              id="mgr-dash-apply-leave-btn"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>+ Apply Leave</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 4 Required KPI Cards */}

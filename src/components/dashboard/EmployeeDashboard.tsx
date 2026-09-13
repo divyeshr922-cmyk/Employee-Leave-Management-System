@@ -125,7 +125,7 @@ export const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
             id="dash-apply-leave-btn"
           >
             <Plus className="w-4 h-4" />
-            <span>Apply Leave</span>
+            <span>+ Apply Leave</span>
           </button>
         </div>
       </div>

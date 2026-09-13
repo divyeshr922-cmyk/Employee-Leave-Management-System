@@ -140,12 +140,12 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           )}
 
-          {/* Quick Action Button: Apply Leave for Staff (Manager/Employee). Admin uses sidebar and console to add employee */}
+          {/* Quick Action Button: Apply Leave for Staff (Manager/Employee) - Hidden on desktop as requested */}
           {currentRole !== 'ADMIN' && (
             <button
               type="button"
               onClick={onOpenApplyLeave}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold w-8 h-8 sm:w-auto p-0 sm:px-3.5 sm:py-2 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer tap-active shrink-0"
+              className="md:hidden bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold w-8 h-8 sm:w-auto p-0 sm:px-3.5 sm:py-2 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer tap-active shrink-0"
               id="header-apply-leave-btn"
               title="Apply Leave"
             >

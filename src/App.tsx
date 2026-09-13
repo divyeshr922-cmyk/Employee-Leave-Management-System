@@ -208,6 +208,7 @@ const MainAppContent: React.FC = () => {
                     <ManagerDashboard
                       onSelectRequest={setSelectedRequest}
                       onNavigateToTab={setActiveTab}
+                      onOpenApplyLeave={() => setIsApplyModalOpen(true)}
                     />
                   )}
                   {currentRole === 'ADMIN' && (

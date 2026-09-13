@@ -126,43 +126,45 @@ export const Sidebar: React.FC<SidebarProps> = ({
     ADMIN: 'Admin Console'
   };
 
-  const renderContent = () => (
+  const renderContent = (isDesktop = false) => (
     <div className="flex flex-col h-full bg-white select-none">
       
-      {/* Primary Action Button */}
-      <div className="p-4 border-b border-slate-100">
-        {currentRole === 'ADMIN' ? (
-          <button
-            type="button"
-            onClick={() => {
-              if (onOpenAddEmployee) {
-                onOpenAddEmployee();
-              } else {
-                setActiveTab('employees');
-              }
-              if (onCloseMobile) onCloseMobile();
-            }}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-3 rounded-xl shadow-xs flex items-center justify-center gap-2 text-xs transition-all cursor-pointer tap-active"
-            id="sidebar-add-employee-btn"
-          >
-            <UserPlus className="w-4 h-4" />
-            <span>+ Add Employee</span>
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => {
-              onOpenApplyLeave();
-              if (onCloseMobile) onCloseMobile();
-            }}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-3 rounded-xl shadow-xs flex items-center justify-center gap-2 text-xs transition-all cursor-pointer tap-active"
-            id="sidebar-apply-leave-btn"
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>Apply Leave</span>
-          </button>
-        )}
-      </div>
+      {/* Primary Action Button - Hidden on desktop view as requested */}
+      {!isDesktop && (
+        <div className="p-4 border-b border-slate-100">
+          {currentRole === 'ADMIN' ? (
+            <button
+              type="button"
+              onClick={() => {
+                if (onOpenAddEmployee) {
+                  onOpenAddEmployee();
+                } else {
+                  setActiveTab('employees');
+                }
+                if (onCloseMobile) onCloseMobile();
+              }}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-3 rounded-xl shadow-xs flex items-center justify-center gap-2 text-xs transition-all cursor-pointer tap-active"
+              id="sidebar-add-employee-btn"
+            >
+              <UserPlus className="w-4 h-4" />
+              <span>+ Add Employee</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                onOpenApplyLeave();
+                if (onCloseMobile) onCloseMobile();
+              }}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-3 rounded-xl shadow-xs flex items-center justify-center gap-2 text-xs transition-all cursor-pointer tap-active"
+              id="sidebar-apply-leave-btn"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>Apply Leave</span>
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Navigation Links */}
       <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto overscroll-contain">
@@ -200,33 +202,35 @@ export const Sidebar: React.FC<SidebarProps> = ({
         })}
       </nav>
 
-      {/* User Status & Sign Out Footer */}
-      <div className="p-3 border-t border-slate-100 bg-slate-50/70 mt-auto space-y-2">
-        <div className="flex items-center justify-between px-2">
-          <div className="flex items-center gap-2 truncate">
-            <div className="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center shrink-0">
-              {currentUser?.name.charAt(0) || 'U'}
+      {/* User Status & Sign Out Footer - Hidden on desktop view as requested */}
+      {!isDesktop && (
+        <div className="p-3 border-t border-slate-100 bg-slate-50/70 mt-auto space-y-2">
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center gap-2 truncate">
+              <div className="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center shrink-0">
+                {currentUser?.name.charAt(0) || 'U'}
+              </div>
+              <div className="truncate text-left">
+                <span className="text-xs font-bold text-slate-800 block truncate">{currentUser?.name}</span>
+                <span className="text-[10px] text-slate-400 capitalize block">{currentRole.toLowerCase()}</span>
+              </div>
             </div>
-            <div className="truncate text-left">
-              <span className="text-xs font-bold text-slate-800 block truncate">{currentUser?.name}</span>
-              <span className="text-[10px] text-slate-400 capitalize block">{currentRole.toLowerCase()}</span>
-            </div>
-          </div>
 
-          <button
-            type="button"
-            onClick={() => {
-              logout();
-              window.history.pushState({}, '', '/');
-            }}
-            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-            title="Sign Out"
-            aria-label="Sign Out"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                window.history.pushState({}, '', '/');
+              }}
+              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+              title="Sign Out"
+              aria-label="Sign Out"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
     </div>
   );
@@ -235,7 +239,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <>
       {/* Desktop Persistent Sidebar (Light surface, clean border) */}
       <aside className="w-60 bg-white flex-col shrink-0 min-h-[calc(100vh-4rem)] border-r border-slate-200 hidden md:flex">
-        {renderContent()}
+        {renderContent(true)}
       </aside>
 
       {/* Mobile Slide-Out Drawer */}
